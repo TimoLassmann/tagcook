@@ -500,7 +500,8 @@ int init_pst(struct pst** pst, int len)//, struct tl_seq_buffer* sb)
         p->p_min = 0.0001f;
         p->r = 1.02f;
         p->fpst_root = NULL;
-
+        p->mean = 0.0f;
+        p->var = 0.0f;
         RUN(alloc_fpst(&p->fpst_root, 64));
         *pst = p;
         return OK;

@@ -82,7 +82,7 @@ int read_cookbook_command_line(struct cookbook** cookbook, char* in)
 
                 r_token = strtok_r(NULL, "@",&r_end);
         }
-
+        cb->num_lib = 1;
         *cookbook = cb;
         return OK;
 ERROR:

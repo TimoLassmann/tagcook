@@ -13,7 +13,9 @@ LIBS = @TLDEVEL_LIB@ $(HDF5_LDFLAGS)  $(HDF5_LIBS) -lm
 bin_PROGRAMS = tagcook simdust
 
 simdust_SOURCES = \
-sim_dust_test.c
+sim_dust_test.c \
+sim_seq_lib.h \
+sim_seq_lib.c
 
 tagcook_SOURCES = \
 main.c \
@@ -51,6 +53,8 @@ bpm.c \
 pst_structs.h \
 pst.h \
 pst.c \
+calibrate_pst.h \
+calibrate_pst.c \
 lpst.h \
 lpst.c \
 init_poahmm.h \

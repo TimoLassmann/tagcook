@@ -3,10 +3,12 @@
 
 
 
+
 #include "pst.h"
+
 #include "tlseqio.h"
+#include "tlrng.h"
 
-
-extern int calibrate_pst(struct pst* pst, struct sequence_stats_info* si,struct rng_state* rng);
+extern int calibrate_pst(struct pst* pst, struct tl_seq_buffer* sb, int expected_len,struct rng_state* rng);
 
 #endif

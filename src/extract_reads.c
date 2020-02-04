@@ -18,6 +18,7 @@
 #include "filter.h"
 //#include "filter_pst.h"
 #include "pst.h"
+#include "calibrate_pst.h"
 
 #define READ_CHUNK_SIZE 100000
 #define CHUNKS 10
@@ -80,7 +81,9 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
                 if(param->filter_error == -1){
                         RUN(alloc_kmer_counts(&k, 12));
                         RUN(add_counts(k, wb));
+
                         RUN(run_build_pst(&pst, k));
+                        calibrate_pst(pst, wb, 20, rng);
                         free_kmer_counts(k);
                         free_tl_seq_buffer(wb);
                         wb = NULL;
@@ -212,7 +215,7 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
 #pragma omp for private(i)
 #endif
                                 for(i = 0; i < as->num_reads;i++){
-                                        run_filter_pst(as,pst,i,0.5f);
+                                        run_filter_pst(as,pst,i,0.9f);
                                 }
                                 STOP_TIMER(t1);
                                 LOG_MSG("Filtering reads (pst) took %f ",GET_TIMING(t1));

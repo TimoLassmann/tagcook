@@ -622,12 +622,9 @@ int add_file_name_options(struct rbtree_root** r, struct read_ensembl*e,  struct
                                 MMALLOC(new_ptr->key, sizeof(char)*2);
                                 new_ptr->key[0] = (char)(c+33);
                                 new_ptr->key[1] = 0;
-
-
                                 RUN(root2->tree_insert(root2,new_ptr));
                                 new_ptr = NULL;
                                 c++;
-
                         }
                 }else{
                         RUN(alloc_demux_struct(&new_ptr));

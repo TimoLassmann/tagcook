@@ -5,33 +5,90 @@
 #include "tlrng.h"
 #include "tldevel.h"
 #include "tllogsum.h"
+#include "pst_structs.h"
+static inline int nuc_to_internal(const char c);
 
-int calibrate_pst(struct pst* pst, struct sequence_stats_info* si,struct rng_state* rng)
+int calibrate_pst(struct pst* pst, struct tl_seq_buffer* sb, int expected_len,struct rng_state* rng)
 {
-        float background[4];
+
         char* test_seq = NULL;
+        double sum;
+        double r;
+        float P_R,P_M;
+        double s0,s1,s2;
+        float score;
         int len;
+        int i,j,c;
 
-        MMALLOC(test_seq, sizeof(char) * 1024);
-        for(i = 0; i < 4;i++){
-                background[i] = scaledprob2prob(si->background[i]);
-                LOG_MSG("%d %f",i, background[i]);
-        }
+        s0 = 0.0;
+        s1 = 0.0;
+        s2 = 0.0;
 
+        MMALLOC(test_seq, sizeof(char) * (expected_len+1));
         for(i = 0; i < 1000000;i++){
-                len = (int) tl_random_gaussian(rng, mean_seq_len,stdev_seq_len);
+                for(j = 0; j < expected_len;j++){
+                        sum = 0;
+                        r = tl_random_double(rng);
+                        for(c = 0; c < 4;c++){
+                                sum += scaledprob2prob(pst->fpst_root->prob[0][c]);
+                                if(r < sum){
+                                        test_seq[j] = "ACGT"[c];
+                                        break;
+                                }
+                        }
 
-                if(len > 1024){
-                        len = 1024;
                 }
+                test_seq[expected_len] = 0;
+                //LOG_MSG("%s", test_seq);
+                RUN(score_pst(pst,test_seq, expected_len, &P_M, &P_R));
+                score = P_M-P_R;
+                //LOG_MSG("%f ",score);
+                s0 += 1.0;
+                s1 += score;
+                s2 += score * score;
+
 
 
         }
+        pst->mean = s1 / s0;
 
-
+        pst->var =  sqrt ( (s0 * s2 -  pow(s1, 2.0)) /  (s0 * ( s0 - 1.0)));
+        //exit(0);
+        //LOG_MSG("%f %f",pst->mean,pst->var);
+        //exit(0);
+        MFREE(test_seq);
         return OK;
 ERROR:
         return FAIL;
 }
 
 
+static inline int nuc_to_internal(const char c)
+{
+        switch (c) {
+        case 'A':
+        case 'a':
+                return 0;
+                break;
+        case 'C':
+        case 'c':
+                return 1;
+                break;
+        case 'G':
+        case 'g':
+                return 2;
+                break;
+        case 'T':
+        case 't':
+                return 3;
+                break;
+        case 'N':
+        case 'n':
+                return 0;
+                break;
+        default:
+                return 0;
+                break;
+        }
+        return -1;
+}

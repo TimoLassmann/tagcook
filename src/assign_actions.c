@@ -84,9 +84,9 @@ int post_process_assign(struct assign_struct* as)
                                 break;
                         }
                         bv->fail |= bv->bits[j]->fail;
-                        if(bv->fail){
-                                LOG_MSG("FAIL:%d  %s",bv->fail,bv->name);
-                        }
+                        //if(bv->fail){
+                                //LOG_MSG("FAIL:%d  %s",bv->fail,bv->name);
+                        //}
                 }
                 //fprintf(stdout,"\n");
                 code[len] =0;

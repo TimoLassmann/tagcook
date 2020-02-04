@@ -24,6 +24,7 @@
   \brief Functions to deal with user inputs.
 */
 
+#include <string.h>
 #include <unistd.h>
 #include "interface.h"
 
@@ -36,6 +37,7 @@
 #define OPT_BOOK 4
 #define OPT_FILTER 5
 #define OPT_ERROR 6
+#define OPT_OUTFORMAT 7
 
 static int print_tagcook_warranty(void);
 
@@ -142,7 +144,7 @@ int interface(struct parameters** p,int argc, char *argv[])
         param->filter_fasta = NULL;
         param->filter_error = -1;
         param->num_threads = 8;
-        param->bam = 1;
+        param->bam = 0;
         param->seed = 42;
 
 
@@ -160,6 +162,7 @@ int interface(struct parameters** p,int argc, char *argv[])
                         {"seed",required_argument,0, OPT_SEED},
                         {"book",required_argument,0, OPT_BOOK },
                         {"filter", required_argument,0,OPT_FILTER},
+                        {"fmt", required_argument,0,OPT_OUTFORMAT},
                         {"error", required_argument, 0, OPT_ERROR},
                         {"help",0,0,'h'},
                         {"version",0,0,'v'},
@@ -176,6 +179,15 @@ int interface(struct parameters** p,int argc, char *argv[])
 
                 switch(c) {
                 case 0:
+                        break;
+                case OPT_OUTFORMAT:
+                        if(!strncmp(optarg, "fastq",5)){
+                                param->bam = 0;
+                        }else if(!strncmp(optarg, "bam", 3)){
+                                param->bam =1;
+                        }else{
+                                ERROR_MSG("fmt option: %s not recognised", optarg);
+                        }
                         break;
                 case OPT_ERROR:
                         param->filter_error = atoi(optarg);
@@ -311,7 +323,7 @@ void usage()
         fprintf(stdout, "Options:\n");
 
 
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-Q","FLT","", "confidence threshold [20].");
+        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-fmt","STR","", "output format.");
         fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-l","STR","", "log file directory name.");
         fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-start","INT","", "start of search area [0].");
         fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-end","INT","", "end of search area [length of sequence].");

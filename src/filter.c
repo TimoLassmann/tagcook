@@ -7,12 +7,13 @@
 #include "bpm.h"
 
 #include "pst.h"
-
+#include "pst_structs.h"
 #include "tlseqio.h"
 #include "tlrng.h"
 #include "tlalphabet.h"
 
 #include "tlmisc.h"
+#include "tllogsum.h"
 
 #define CHUNKS 10
 
@@ -73,13 +74,13 @@ int run_filter_exact(struct assign_struct* as, struct ref* ref, int index, int t
 
 
 int run_filter_pst(struct assign_struct* as, struct pst* pst, int index, float thres)
-
 {
         struct seq_bit_vec* bv;
         struct seq_bit* sb;
 
 
         int i;
+        float P_R,P_M;
         float out;
 
         bv = as->bit_vec[index];
@@ -87,8 +88,19 @@ int run_filter_pst(struct assign_struct* as, struct pst* pst, int index, float t
         for(i = 0; i < as->out_reads;i++){
                 sb = bv->bits[as->loc_out_reads[i]];
                 //sb = bv->bits[i];
-                RUN(scan_read_with_pst(pst,  sb->p.s , sb->p.l,&out));
-                if(out >= thres){
+                //RUN(scan_read_with_pst(pst,  sb->p.s , sb->p.l,&out));
+                RUN(score_pst(pst,sb->p.s , sb->p.l, &P_M, &P_R));
+                out = P_M-P_R;
+
+
+
+                LOG_MSG("%d Z-score: %f (%f %f %f)",index, (out - pst->mean) / pst->var, out, pst->mean,pst->var);
+
+                out = (out - pst->mean) / pst->var;
+
+
+                if(out >= 1.0){
+                        //LOG_MSG("%f %f %d", thres, out);
                         sb->fail |= READ_FAILP;
                 }
         }

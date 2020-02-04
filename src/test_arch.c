@@ -46,11 +46,12 @@ int test_architectures(struct cookbook* cb, struct read_groups* rg)
         int i;
         int g;
         int c;
+
         for(i = 0 ;i < cb->num_lib;i++){
                 //LOG_MSG("------");
                 //LOG_MSG("Testing: %s", cb->lib[i]->name);
                 RUN(test_arch_file_order(cb->lib[i],rg));
-                cb->scores[i] = cb->lib[i]->P;
+                //cb->scores[i] = cb->lib[i]->P;
 
                 //LOG_MSG("score: %f", cb->lib[i]->P);
                 //LOG_MSG("------");

@@ -20,6 +20,8 @@ struct pst {
         float p_min;
         float gamma_min;
         float r;
+        float mean;
+        float var;
         int L;
 };
 
