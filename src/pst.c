@@ -39,7 +39,6 @@ static void print_pst(struct pst* pst,struct pst_node* n);
 static void free_pst_node(struct pst_node* n);
 
 static struct pst_node* alloc_node(struct pst_node* n,char* string,int len);
-//static void free_node(struct pst_node*n);
 
 static inline int nuc_to_internal(const char c);
 
@@ -109,7 +108,6 @@ int scan_read_with_pst(struct pst* pst, char* seq, int len, float*r)
         P_S = prob2scaledprob(1.0);
         P_P = prob2scaledprob(1.0);
         P_R = prob2scaledprob(1.0);
-
         P_F = prob2scaledprob(1.0);
         //fprintf(stdout,"%s - query sequence\n", seq);
         for(i = 0; i < len; i++ ){
@@ -146,9 +144,6 @@ int scan_read_with_pst(struct pst* pst, char* seq, int len, float*r)
         //exit(0);
         return OK;
 }
-
-
-
 
 float get_pst_prob(struct pst_node* n, char* string,int target, int pos)
 {
@@ -219,11 +214,9 @@ float get_fppt_prob(struct fpst* f, char* string,int target, int pos, int len)
         return f->prob[n][target];
 }
 
-
 int run_build_pst(struct pst** pst, struct kmer_counts* k)//  struct tl_seq_buffer* sb)
 {
         struct pst* p = NULL;
-
         struct pst_node* helper = NULL;
         float sum;
         int i;
@@ -270,19 +263,13 @@ int run_build_pst(struct pst** pst, struct kmer_counts* k)//  struct tl_seq_buff
         p->fpst_root->l++;
         free_pst_node(helper);
         helper = NULL;
-
-
         /*RUN(init_helper(&helper, k->counts[0], p->gamma_min));
         helper = build_ppt(p,p->fppt_root,0, helper,k);
         p->fppt_root->l++;
         free_pst_node(helper);
         helper = NULL;*/
-
-
         RUN(prob2scaledprob_fpst(p->fpst_root));
         //RUN(prob2scaledprob_fpst(p->fppt_root));
-
-
         //fprintf(stdout,"Size: %d\n", p->fppt_root->l + p->fpst_root->l * 8 *4);
 //LOG_MSG("PPT:");
         //exit(0);
@@ -292,7 +279,6 @@ int run_build_pst(struct pst** pst, struct kmer_counts* k)//  struct tl_seq_buff
 ERROR:
         return FAIL;
 }
-
 
 int init_helper(struct pst_node** helper, uint32_t* counts,float gamma_min)
 {
@@ -338,7 +324,6 @@ struct pst_node* build_pst(struct pst* pst,struct fpst*f,int curf, struct pst_no
 
         maxlen = k->L;
         //step 2 test expansion
-
         //loop though letters at present node
         if(len + 1 < maxlen ){
                 for(i = 0; i < 4;i++){
@@ -491,8 +476,6 @@ struct pst_node* build_ppt(struct pst* pst,struct fpst*f,int curf,struct pst_nod
                                         if(f->l== f->m){
                                                 resize_fpst(f);
                                         }
-
-
                                         n->next[i] = alloc_node(n->next[i] ,tmp+1,len+1);
                                         //sum = 0;
                                         for(j = 0; j < 4;j++){
@@ -508,9 +491,6 @@ struct pst_node* build_ppt(struct pst* pst,struct fpst*f,int curf,struct pst_nod
         return n;
 }
 
-
-
-
 int init_pst(struct pst** pst, int len)//, struct tl_seq_buffer* sb)
 {
         struct pst* p = NULL;
@@ -520,10 +500,8 @@ int init_pst(struct pst** pst, int len)//, struct tl_seq_buffer* sb)
         p->p_min = 0.0001f;
         p->r = 1.02f;
         p->fpst_root = NULL;
-        //p->fppt_root = NULL;
 
         RUN(alloc_fpst(&p->fpst_root, 64));
-        //RUN(alloc_fpst(&p->fppt_root, 64));
         *pst = p;
         return OK;
 ERROR:
@@ -534,7 +512,6 @@ void free_pst(struct pst* p)
 {
         if(p){
                 free_fpst(p->fpst_root);
-                //free_fpst(p->fppt_root);
                 MFREE(p);
         }
 }
@@ -585,7 +562,6 @@ void print_pst(struct pst* pst,struct pst_node* n)
                 fprintf(stdout,"%s\t",n->label);
                 for(i = 0;i < 4;i++){
                         fprintf(stdout,"%f ",n->nuc_probability[i]);
-
                 }
                 fprintf(stdout,"\n");
         }
@@ -593,9 +569,9 @@ void print_pst(struct pst* pst,struct pst_node* n)
         for(i = 0;i < 4;i++){
                 if(n->next[i]){
                         //if(n->next[i]->in_T){
-                                //fprintf(stderr,"Going:%d\n",i);
+                        //fprintf(stderr,"Going:%d\n",i);
                         print_pst(pst,n->next[i]);
-                                //}
+                        //}
                 }
         }
 }
@@ -607,7 +583,6 @@ int alloc_kmer_counts(struct kmer_counts** k,  int len)
         int total;
 
         MMALLOC(counts, sizeof(struct kmer_counts));
-
 
         counts->L = MACRO_MIN(MAX_PST_LEN, len);
         counts->counts = NULL;
@@ -650,7 +625,6 @@ int add_counts(struct kmer_counts* k , struct tl_seq_buffer* sb)
         mask = k->mask;
         L = k->L;
         //sb->num_seq = 1;
-
         for(i = 0; i < sb->num_seq;i++){
                 x = 0;
                 seq = sb->sequences[i]->seq;

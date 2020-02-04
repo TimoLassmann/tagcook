@@ -18,7 +18,6 @@ int main (int argc,char * argv[]) {
         struct parameters* param = NULL;
         struct cookbook* cookbook = NULL;
         struct arch_library* al = NULL;
-        //struct seq_stats* si = NULL;
         struct rng_state* main_rng = NULL;
         struct read_groups* read_groups = NULL;
         int i,j,c;
@@ -30,16 +29,11 @@ int main (int argc,char * argv[]) {
         ASSERT(param->num_infiles > 0, "Number of inputs has to be greater than 0");
         ASSERT(param->outfile != NULL, "No output file suffix");
 
-
         /* Sanity checks */
         /* are we dealing with multiple lanes? */
-
         /* are the sequences sorted? */
         RUN(generate_read_groups(&read_groups, param->infile, param->num_infiles));
         /* are the segment specifications valid? */
-
-
-
         if(param->book_file && param->recipe){
                 /* Format:
                    ./tagdust -r "@BC:S:ACAGTG,ACTTGA,TTAGGC;READ1:E:N{20-30};@READ2:E:N+;" ../dev/casava_read1_small.fastq.gz -o ~/tmp/gg
@@ -56,16 +50,11 @@ int main (int argc,char * argv[]) {
 
         /* set top level rng generator */
         RUNP(main_rng = init_rng(param->seed));
-
-
-
         /* create architecture library */
         //RUN(alloc_arch_lib(&al));
-
         /*if(param->segments[0]){
                 RUN(read_arch_into_lib(al, param->segments, param->num_segments));
         }
-
         if(param->arch_file){
                 RUN(read_architecture_files(al, param->arch_file));
                 }*/
@@ -76,10 +65,6 @@ int main (int argc,char * argv[]) {
         WARNING_MSG("Running without OpenMP!");
 #endif
         init_logsum();
-
-
-
-
         for(i = 0; i < read_groups->num_groups;i++){
                 LOG_MSG("Get stats on %d ", i);
                 RUN(get_sequence_stats(read_groups->e[i], main_rng));
@@ -90,12 +75,7 @@ int main (int argc,char * argv[]) {
                 }
         }
 
-        //exit(0);
-
-
         RUN(test_architectures(cookbook, read_groups));
-
-
 
         al = cookbook->lib[cookbook->best];
 
@@ -106,7 +86,6 @@ int main (int argc,char * argv[]) {
 
         //free_arch_lib(al);
         free_read_groups(read_groups);
-
         free_cookbook(&cookbook);
         //free_sequence_stats(si);
         free_param(param);
@@ -122,4 +101,3 @@ ERROR:
         }
         return EXIT_SUCCESS;
 }
-

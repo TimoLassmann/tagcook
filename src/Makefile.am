@@ -10,43 +10,7 @@ AM_LDFLAGS += -static
 
 LIBS = @TLDEVEL_LIB@ $(HDF5_LDFLAGS)  $(HDF5_LIBS) -lm
 
-bin_PROGRAMS = tagdust pst poahmm  correct_test
-
-
-
-poahmm_SOURCES = \
-poahmm_test.c \
-init_poahmm.h \
-init_poahmm.c \
-poahmm.h \
-poahmm_structs.h \
-poahmm.c \
-base_quality.h \
-base_quality.c \
-sim_seq_lib.h \
-sim_seq_lib.c \
-arch_lib.h \
-arch_lib.c \
-pst.h \
-pst.c \
-correct.h \
-correct.c \
-arch_lib_parse_token.h \
-arch_lib_parse_token.c 
-
-pst_SOURCES = \
-pst.h \
-pst.c \
-pst_test.c \
-sim_seq_lib.h \
-sim_seq_lib.c
-
-correct_test_SOURCES = \
-correct.h \
-correct.c \
-base_quality.h \
-base_quality.c \
-correct_test.c
+bin_PROGRAMS = tagdust
 
 
 tagdust_SOURCES = \
@@ -197,14 +161,16 @@ io.c
 rename_qiime_CPPFLAGS = -DRENAME
 rename_qiime_LDADD = -lm
 
-TESTS =arch_lib_test interface_test io_hdf5_test zwrite core_hmm_test bq_test
+TESTLIST = arch_lib_test interface_test io_hdf5_test zwrite core_hmm_test band_test bq_test read_group_test poahmm_test pst_test correct_test
+
+TESTS = $(TESTLIST)
 
 TESTS_ENVIRONMENT = \
 	devdir='$(top_srcdir)'/dev; \
          export devdir; \
 	$(VALGRIND)
 
-check_PROGRAMS = arch_lib_test interface_test io_hdf5_test zwrite core_hmm_test band_test bq_test read_group_test
+check_PROGRAMS = $(TESTLIST)
 
 band_test_SOURCES = banded_test.c
 
@@ -270,6 +236,42 @@ seq_stats.h \
 seq_stats.c 
 
 read_group_test_CPPFLAGS = $(AM_CPPFLAGS) -DREAD_GROUP_ITEST
+
+poahmm_test_SOURCES = \
+poahmm_test.c \
+init_poahmm.h \
+init_poahmm.c \
+poahmm.h \
+poahmm_structs.h \
+poahmm.c \
+base_quality.h \
+base_quality.c \
+sim_seq_lib.h \
+sim_seq_lib.c \
+arch_lib.h \
+arch_lib.c \
+pst.h \
+pst.c \
+correct.h \
+correct.c \
+arch_lib_parse_token.h \
+arch_lib_parse_token.c 
+
+
+pst_test_SOURCES = \
+pst.h \
+pst.c \
+pst_test.c \
+sim_seq_lib.h \
+sim_seq_lib.c
+
+correct_test_SOURCES = \
+correct.h \
+correct.c \
+base_quality.h \
+base_quality.c \
+correct_test.c
+
 
 zwrite_SOURCES = test_pipe.c
 

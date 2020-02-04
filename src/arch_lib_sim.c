@@ -1,16 +1,10 @@
 #include "math.h"
 
-
 #include "tldevel.h"
-
 
 #include "arch_lib_sim.h"
 
-
-
-
 static int set_len_of_unknown_rs(const struct read_structure*rs, int* min_plus_len,int* max_plus_len, int min_seq_len, int max_seq_len);
-
 
 int emit_from_rs(const struct read_structure* rs, struct rng_state* rng, struct alphabet* a,  uint8_t** seq, uint8_t** qual, int* len, int sim_len)
 {
@@ -28,7 +22,6 @@ int emit_from_rs(const struct read_structure* rs, struct rng_state* rng, struct 
 
         MMALLOC(s, sizeof(uint8_t) * m);
         MMALLOC(q, sizeof(uint8_t) * m);
-
 
         for(i = 0; i < rs->num_segments;i++){
                 spec = rs->seg_spec[i];
@@ -48,14 +41,11 @@ int emit_from_rs(const struct read_structure* rs, struct rng_state* rng, struct 
                         if(spec->max_len == INT32_MAX){
                                 s[l] = tl_random_int(rng, 4);
                         }else{
-
                                 if( spec->seq[b][j] == 'N'){
                                         s[l] = tl_random_int(rng, 4);
-
                                 }else{
-                                        s[l] =  tlalphabet_get_code(a, spec->seq[b][j]);
+                                        s[l] = tlalphabet_get_code(a, spec->seq[b][j]);
                                 }
-
                         }
                         q[l] = tl_random_gaussian(rng, 20.0, 2.0);
                         //s->label[l] = etype[spec->extract];
