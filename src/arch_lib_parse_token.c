@@ -176,7 +176,7 @@ int parse_rs_token(char* token, struct segment_specs** s_spec)
         }else if(state == 2){
                 ASSERT(pos < len, "No sequence?");
                 if(!strncmp(spec->name, "NA", BUFFER_LEN)){
-                        ERROR_MSG("Name: \"NA\" has a special meaning in tagdust");
+                        ERROR_MSG("Name: \"NA\" has a special meaning in tagcook");
                 }
         }else if(state == 3){
                 spec->extract = ARCH_ETYPE_APPEND_CORRECT;

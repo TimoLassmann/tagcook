@@ -1,9 +1,8 @@
-AC_INIT([tagdust], [2.4.0])
+AC_INIT([tagcook], [0.8.0])
 
 AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE
 AC_USE_SYSTEM_EXTENSIONS
-
 
 
 AC_PROG_CC

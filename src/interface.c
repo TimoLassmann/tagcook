@@ -37,30 +37,30 @@
 #define OPT_FILTER 5
 #define OPT_ERROR 6
 
-static int print_tagdust_warranty(void);
+static int print_tagcook_warranty(void);
 
-static int print_tagdust_header(void);
+static int print_tagcook_header(void);
 
-int print_tagdust_header(void)
+int print_tagcook_header(void)
 {
         fprintf(stdout,"\n");
-        fprintf(stdout,"Tagdust (%s)\n", PACKAGE_VERSION);
+        fprintf(stdout,"Tagcook (%s)\n", PACKAGE_VERSION);
         fprintf(stdout,"\n");
-        fprintf(stdout,"Copyright (C) 2009,2020 Timo Lassmann\n");
+        fprintf(stdout,"Copyright (C) 2020 Timo Lassmann\n");
         fprintf(stdout,"\n");
         fprintf(stdout,"This program comes with ABSOLUTELY NO WARRANTY; for details type:\n");
-        fprintf(stdout,"`tagdust -showw'.\n");
+        fprintf(stdout,"`tagcook -showw'.\n");
         fprintf(stdout,"This is free software, and you are welcome to redistribute it\n");
         fprintf(stdout,"under certain conditions; consult the COPYING file for details.\n");
         fprintf(stdout,"\n");
         fprintf(stdout,"Please cite:\n");
 
-
+        /*
         fprintf(stdout,"  Lassmann, Timo.\n");
         fprintf(stdout,"  \"TagDust2: a generic method to extract reads from sequencing data.\"\n");
         fprintf(stdout,"  BMC bioinformatics (2015) \n");
         fprintf(stdout,"  https://doi.org/10.1186/s12859-015-0454-y\n");
-        fprintf(stdout,"\n");
+        fprintf(stdout,"\n");*/
 
         /*fprintf(stdout,"  Lassmann, Timo, Oliver Frings, and Erik LL Sonnhammer.\n");
         fprintf(stdout,"  \"Kalign2: high-performance multiple alignment of protein and\n");
@@ -74,7 +74,7 @@ int print_tagdust_header(void)
         return OK;
 }
 
-int print_tagdust_warranty(void)
+int print_tagcook_warranty(void)
 {
         fprintf(stdout,"Here is the Disclaimer of Warranty section of the GNU General Public License (GPL):\n");
         fprintf(stdout,"\n");
@@ -116,7 +116,7 @@ int interface(struct parameters** p,int argc, char *argv[])
         int version = 0;
         int showw = 0;
 
-        print_tagdust_header();
+        print_tagcook_header();
         if (argc < 2 && isatty(0)){
                 usage();
                 return OK;
@@ -224,7 +224,7 @@ int interface(struct parameters** p,int argc, char *argv[])
         }
 
         if(showw){
-                print_tagdust_warranty();
+                print_tagcook_warranty();
                 free_param(param);
                 return OK;
 
@@ -307,7 +307,7 @@ ERROR:
 
 void usage()
 {
-        fprintf(stdout, "Usage:   tagdust [options] <file>  -o <output prefix> \n\n");
+        fprintf(stdout, "Usage:   tagcook [options] <file>  -o <output prefix> \n\n");
         fprintf(stdout, "Options:\n");
 
 
@@ -335,70 +335,6 @@ void usage()
 
 }
 
-#ifdef SIMREADS
-void usage()
-{
-        fprintf(stdout, "\n%s %s, Copyright (C) 2015-2019 Timo Lassmann <%s>\n",PACKAGE_NAME, PACKAGE_VERSION,PACKAGE_BUGREPORT);
-        fprintf(stdout, "\n");
-        fprintf(stdout, "Usage:   simreads  [options] <barcodefile from EDITTAG>-o <file>  .... \n\n");
-        fprintf(stdout, "Options:\n");
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-sim_barlen","INT","", "Barcode length.");
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-sim_barnum","INT" ,"","Number of samples.");
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-sim_5seq","STR" ,"", "Sequence of 5' linker.");
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-sim_3seq","STR" ,"", "Sequence of 3' linker.");
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-sim_readlen","INT" ,"", "Length of read.");
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-sim_readlen_mod","INT" ,"", "+/- mod of read length.");
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-sim_error_rate","FLT" ,"", "Simulated error rate.");
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-sim_InDel_frac","FLT" ,"", "INDEL fraction.");
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-sim_numseq","INT" ,"", "Number of simulated sequences.");
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-sim_random_frac","FLT" ,"", "Fraction of totally random sequences.");
-        fprintf (stdout,"\t%-17s%10s%7s%-30s\n","-sim_endloss","INT" ,"", "mean number of nucleotides lost on either end of the read.");
-
-
-        fprintf(stdout, "\n");
-
-}
-
-#endif
-
-#ifdef MERGE
-void usage()
-{
-        fprintf(stdout, "\n%s %s, Copyright (C) 2015-2019 Timo Lassmann <%s>\n",PACKAGE_NAME, PACKAGE_VERSION,PACKAGE_BUGREPORT);
-        fprintf(stdout, "\n");
-        fprintf(stdout, "Usage:   merge <file>  .... \n\n");
-        fprintf(stdout, "Options:\n");
-
-
-        fprintf(stdout, "\n");
-
-}
-#endif
-
-#ifdef RENAME
-void usage()
-{
-        fprintf(stdout, "\n%s %s, Copyright (C) 2015-2019 Timo Lassmann <%s>\n",PACKAGE_NAME, PACKAGE_VERSION,PACKAGE_BUGREPORT);
-        fprintf(stdout, "\n");
-        fprintf(stdout, "Usage:   rename_qiime <map file> <file>  .... \n\n");
-        fprintf(stdout, "Options:\n");
-        fprintf(stdout, "\n");
-}
-#endif
-
-#ifdef EVALRES
-void usage()
-{
-        fprintf(stdout, "\n%s %s, Copyright (C) 2015-2019 Timo Lassmann <%s>\n",PACKAGE_NAME, PACKAGE_VERSION,PACKAGE_BUGREPORT);
-        fprintf(stdout, "\n");
-        fprintf(stdout, "Usage:   evalres <file>  .... \n\n");
-        fprintf(stdout, "Options:\n");
-
-
-        fprintf(stdout, "\n");
-
-}
-#endif
 
 int free_param(struct parameters* param)
 {

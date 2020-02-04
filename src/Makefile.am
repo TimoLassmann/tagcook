@@ -10,10 +10,10 @@ AM_LDFLAGS += -static
 
 LIBS = @TLDEVEL_LIB@ $(HDF5_LDFLAGS)  $(HDF5_LIBS) -lm
 
-bin_PROGRAMS = tagdust
+bin_PROGRAMS = tagcook
 
 
-tagdust_SOURCES = \
+tagcook_SOURCES = \
 main.c \
 interface.h \
 interface.c \
@@ -65,101 +65,7 @@ read_groups.c
 
 
 
-tagdust_LDADD =  -lpthread -lm
-
-
-
-# misc.h \
-# misc.c \
-# nuc_code.h \
-# nuc_code.c \
-# barcode_hmm.h \
-# barcode_hmm.c \
-# seq_stats.h \
-# seq_stats.c \
-# hmm_model_bag.h \
-# hmm_model_bag.c \
-# core_hmm_functions.h \
-# core_hmm_functions.c \
-# test_architectures.c \
-# io.c
-
-
-# tagdust_CPPFLAGS = -DTAGDUST
-
-# tagdust_SOURCES =  \
-# kslib.c \
-# main.c \
-# interface.c \
-# nuc_code.c \
-# misc.c \
-# io.c \
-# barcode_hmm.c \
-# calibrateQ.c \
-# test_architectures.c
-
-# tagdust_LDADD = -lpthread -lm
-# tagdust_CPPFLAGS = -DTAGDUST
-
-
-evalres_SOURCES = \
-barcode_hmm.h \
-io.h \
-nuc_code.h \
-interface.h \
-kslib.h \
-misc.h \
-tagdust2.h \
-kslib.c \
-evalresults.c \
-interface.c \
-misc.c \
-nuc_code.c \
-io.c
-
-
-evalres_LDADD = -lm
-evalres_CPPFLAGS = -DEVALRES
-
-simreads_SOURCES= \
-nuc_code.h \
-sim.h \
-interface.h \
-kslib.h \
-misc.h \
-tagdust2.h \
-kslib.c \
-interface.c \
-nuc_code.c \
-misc.c \
-simulate_reads.c
-
-simreads_CPPFLAGS = -DSIMREADS
-simreads_LDADD = -lm
-
-
-merge_SOURCES = \
-	kslib.c \
-interface.c \
-nuc_code.c \
-io.c \
-misc.c \
-merge.c
-
-merge_LDADD = -lpthread -lm
-merge_CPPFLAGS = -DMERGE
-
-
-rename_qiime_SOURCES = \
-rename_illumina_demultiplexed_for_qiime.c \
-nuc_code.c \
-kslib.c \
-interface.c \
-misc.c \
-io.c
-
-rename_qiime_CPPFLAGS = -DRENAME
-rename_qiime_LDADD = -lm
+tagcook_LDADD =  -lpthread -lm
 
 TESTLIST = arch_lib_test interface_test io_hdf5_test zwrite core_hmm_test band_test bq_test read_group_test poahmm_test pst_test correct_test
 
@@ -274,20 +180,4 @@ correct_test.c
 
 
 zwrite_SOURCES = test_pipe.c
-
-# tagdustiotest_SOURCES = io.c misc.c interface.c kslib.c
-# tagdustiotest_LDADD = $(tagdust_LDADD)
-# tagdustiotest_CPPFLAGS  =  -DUTEST -DTAGDUST
-
-# tagdust_rtest_SOURCES = $(tagdust_SOURCES)
-# tagdust_rtest_LDADD = $(tagdust_LDADD)
-# tagdust_rtest_CPPFLAGS  =  -DRTEST -DTAGDUST
-
-# simreads_rtest_SOURCES = $(simreads_SOURCES)
-# simreads_rtest_LDADD = $(simreads_LDADD)
-# simreads_rtest_CPPFLAGS  =  -DRTEST -DSIMREADS
-
-# evalres_rtest_SOURCES = $(evalres_SOURCES)
-# evalres_rtest_LDADD = $(evalres_LDADD)
-# evalres_rtest_CPPFLAGS  =  -DRTEST -DEVALRES
 
