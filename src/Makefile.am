@@ -10,8 +10,10 @@ AM_LDFLAGS += -static
 
 LIBS = @TLDEVEL_LIB@ $(HDF5_LDFLAGS)  $(HDF5_LIBS) -lm
 
-bin_PROGRAMS = tagcook
+bin_PROGRAMS = tagcook simdust
 
+simdust_SOURCES = \
+sim_dust_test.c
 
 tagcook_SOURCES = \
 main.c \
