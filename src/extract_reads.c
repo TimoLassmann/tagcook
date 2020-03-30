@@ -19,6 +19,7 @@
 //#include "filter_pst.h"
 #include "pst.h"
 #include "calibrate_pst.h"
+#include "esl_stopwatch.h"
 
 #define READ_CHUNK_SIZE 100000
 #define CHUNKS 10
@@ -68,7 +69,9 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
         int total_read;
         int n_files;
 
+
         DECLARE_TIMER(t1);
+
 
         if(param->filter_fasta){
                 //RUN(read_reference_sequences(&ref, param->reference_fasta,param->seed));
@@ -179,7 +182,7 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
                         //fflush(stdout);
                         /* extract reads  */
 
-                        START_TIMER(t1);
+                        START_TIMER(t1)
 #ifdef HAVE_OPENMP
                         LOG_MSG("Run parallel");
 #pragma omp parallel default(shared)
@@ -192,7 +195,8 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
                         }
 
                         STOP_TIMER(t1);
-                        LOG_MSG("extract Took %f ",GET_TIMING(t1));
+                        GET_TIMING(t1);
+                        //LOG_MSG("extract Took %f ",GET_TIMING(t1));
                         //RUN(sort_as_by_file_type(as));
                         if(ref && param->filter_error != -1){
                                 START_TIMER(t1);
@@ -205,7 +209,8 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
                                 }
                                 STOP_TIMER(t1);
                                 //LOG_MSG("filter Took %f ",GET_TIMING(t1));
-                                LOG_MSG("Filtering reads (exact) took %f ",GET_TIMING(t1));
+                                GET_TIMING(t1);
+                                //LOG_MSG("Filtering reads (exact) took %f ",GET_TIMING(t1));
                         }
 
                         if(ref && param->filter_error == -1){
@@ -218,24 +223,28 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
                                         run_filter_pst(as,pst,i,0.9f);
                                 }
                                 STOP_TIMER(t1);
-                                LOG_MSG("Filtering reads (pst) took %f ",GET_TIMING(t1));
+                                GET_TIMING(t1);
+                                //LOG_MSG("Filtering reads (pst) took %f ",GET_TIMING(t1));
                         }
 
                         START_TIMER(t1);
                         RUN(post_process_assign(as));
 
                         STOP_TIMER(t1);
-                        LOG_MSG("Processing took: %f ",GET_TIMING(t1));
+                        GET_TIMING(t1);
+                        //LOG_MSG("Processing took: %f ",GET_TIMING(t1));
                         //LOG_MSG("Write buff: %p",wb);
                         START_TIMER(t1);
                         RUN(write_all(as,&wb,param->bam));
                         STOP_TIMER(t1);
-                        LOG_MSG("Write took: %f ",GET_TIMING(t1));
+                        GET_TIMING(t1);
+                        //LOG_MSG("Write took: %f ",GET_TIMING(t1));
 
                         RUN(reset_assign_structute(as));
                         //exit(0);
                 }
         }
+        DESTROY_TIMER(t1);
         /* FIXME */
         if(wb){
                 free_tl_seq_buffer(wb);
