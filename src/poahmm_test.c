@@ -16,6 +16,8 @@
 
 #include "sim_seq_lib.h"
 
+#include "esl_stopwatch.h"
+
 struct sim_seq{
         char* buffer;
         char* seq;
@@ -522,7 +524,8 @@ int test_banded(struct shared_sim_data* sd)
 
                 }
                 STOP_TIMER(timer);
-                LOG_MSG("LEN:%d\t%f\tNormal Viterbi\ttook %f",i, poahmm->f_score,GET_TIMING(timer));
+                LOG_MSG("LEN:%d\t%f\tNormal Viterbi",i, poahmm->f_score);//,GET_TIMING(timer));
+                GET_TIMING(timer);
                 poahmm->f_score = -2;
                 for(c = 10; c > 0;c--){
                         START_TIMER(timer);
@@ -530,7 +533,8 @@ int test_banded(struct shared_sim_data* sd)
                                 RUN(viterbi_poahmm_banded(poahmm,i_seq,sd->seq->qual, i_len,path,c));
                         }
                         STOP_TIMER(timer);
-                        LOG_MSG("LEN:%d\t%f\tbanded %d\ttook: %f",i, poahmm->f_score,c,GET_TIMING(timer));
+                        LOG_MSG("LEN:%d\t%f\tbanded %d",i, poahmm->f_score,c);
+                        GET_TIMING(timer);
 
 
                 }
@@ -539,6 +543,7 @@ int test_banded(struct shared_sim_data* sd)
 
                 i_seq = NULL;
         }
+        DESTROY_TIMER(timer);
         MFREE(path);
         return OK;
 ERROR:

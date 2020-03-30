@@ -5,6 +5,9 @@
 #include "tllogsum.h"
 
 #include "tldevel.h"
+
+#include "esl_stopwatch.h"
+
 /* test code to incorporate base qualities into alignment scores. */
 /* based on:
 
@@ -206,7 +209,8 @@ int test_timing(void)
                 }
         }
         STOP_TIMER(timer);
-        LOG_MSG("Default took %f seconds", GET_TIMING(timer));
+        GET_TIMING(timer);
+        //LOG_MSG("Default took %f seconds", GET_TIMING(timer));
         START_TIMER(timer);
         for(i = 0; i < seq_len;i++){
                 for(j = 0; j < 4;j++){
@@ -214,8 +218,10 @@ int test_timing(void)
                 }
         }
         STOP_TIMER(timer);
-        LOG_MSG("Default took %f seconds", GET_TIMING(timer));
+        GET_TIMING(timer);
 
+        //LOG_MSG("Default took %f seconds", GET_TIMING(timer));
+        DESTROY_TIMER(timer);
         MFREE(seq);
         MFREE(qual);
         free_bq_score(score);
