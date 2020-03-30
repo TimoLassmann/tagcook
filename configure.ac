@@ -32,6 +32,7 @@ m4_include([m4/ax_check_compile_flag.m4])
 m4_include([m4/ax_ext.m4])
 m4_include([m4/ax_openmp.m4])
 m4_include([m4/ax_with_tldevel.m4])
+m4_include([m4/ax_lib_hdf5.m4])
 m4_include([m4/ax_set_compile_flags.m4])
 AX_EXT
 
@@ -40,6 +41,27 @@ AX_WITH_TLDEVEL
 AC_MSG_NOTICE([$TLDEVEL_CPPFLAGS])
 AC_MSG_NOTICE([$TLDEVEL_LDFLAGS])
 AC_MSG_NOTICE([$TLDEVEL_LIB])
+
+AX_LIB_HDF5([serial])
+if test "$with_hdf5" = "yes"; then
+
+dnl CC="$HDF5_CC"
+CFLAGS="${CFLAGS} ${HDF5_CFLAGS}"
+CPPFLAGS="${CPPFLAGS} ${HDF5_CPPFLAGS}"
+LDFLAGS="${LDFLAGS} ${HDF5_LDFLAGS}"
+LIBS="${LIBS} ${HDF5_LIBS}"
+else
+AC_MSG_WARN([
+
+Unable to find HDF5, we need parallel HDF5.
+Install on fedora:
+sudo dnf install hdf5 hdf5-devel
+
+])
+fi
+
+AM_CONDITIONAL([ENABLE_HDF5], [test "$with_hdf5" = "yes"])
+
 
 AC_ARG_WITH([openmp],
 AS_HELP_STRING([--without-openmp], [Do not use OpenMP]))
