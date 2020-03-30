@@ -113,7 +113,8 @@ core_hmm_test_CPPFLAGS = $(AM_CPPFLAGS) -DCORE_HMM_TEST
 
 io_hdf5_test_SOURCES = \
 io_hdf5.h \
-io_hdf5.c
+io_hdf5.c_
+io_hdf5_test_CPPFLAGS = $(AM_CPPFLAGS)
 
 
 arch_lib_test_SOURCES = \
