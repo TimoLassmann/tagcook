@@ -340,7 +340,7 @@ int assign_segment_sequences(struct read_structure* read_structure,struct hash_s
         int i,j;
         int n;
         RUN(parse_rs_token_message(tmp,&read_structure->seg_spec[segment]));
-        if(read_structure->seg_spec[segment]->extract == ARCH_ETYPE_APPEND_CORRECT){
+        if(read_structure->seg_spec[segment]->extract == ARCH_ETYPE_APPEND_CORRECT || read_structure->seg_spec[segment]->extract == ARCH_ETYPE_CORRECT ){
 
                 s = read_structure->seg_spec[segment];
                 n = -1;
@@ -368,7 +368,7 @@ int assign_segment_sequences(struct read_structure* read_structure,struct hash_s
                         RUN(alloc_kmer_counts(&k, 10));
                         RUN(add_counts(k, sb));
 
-                        RUN(run_build_pst(&hs->pst[hs->num_hash], k));
+                        RUN(run_build_pst(&hs->pst[hs->num_hash],0.05, k));
                         RUN(rm_counts(k,sb));
 
                         RUN(fill_exact_hash(&hs->hash[hs->num_hash], sb));

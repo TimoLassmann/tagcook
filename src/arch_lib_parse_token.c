@@ -242,6 +242,7 @@ int parse_rs_token(char* token, struct segment_specs** s_spec)
                 j++;
 
         }
+
         ASSERT(o_bracket == c_bracket, "Brackets don't match");
 
         ASSERT(o_bracket <= 1, "To many brackets");
@@ -476,9 +477,11 @@ int detect_extract_type(char c, uint8_t* t)
                 *t =  ARCH_ETYPE_WOBBLE_RIGHT;
                 break;
         }
-
+        case 'C': {
+                *t = ARCH_ETYPE_CORRECT;
+                break;
+        }
         default:
-
                 ERROR_MSG("Extract type %c not recognised (allowed is: \"EASIPLR\")", c);
                 break;
         }

@@ -80,6 +80,19 @@ int post_process_assign(struct assign_struct* as)
                                 break;
 
                         }
+                        case ARCH_ETYPE_CORRECT: {
+                                //LOG_MSG("correcyt");
+                                bit = bv->bits[j];
+                                ann = as->bit_ann[j];
+                                //LOG_MSG("%s %s %s", ann->name.s, ann->c_name.s,ann->q_name.s);
+                                correct_index =  bit->correct_index;
+                                RUN(ref_correct(as->bit_ann[j]->bar_hash,as->subm, bit, 33));
+                                bit->p.l = 0;
+                                //for(i = 0; i < bit->p_corr.l;i++){
+                                kputsn( bit->p_corr.s, bit->p_corr.l, &bit->p);
+                                        //}
+                                break;
+                        }
                         default:
                                 break;
                         }
@@ -94,7 +107,7 @@ int post_process_assign(struct assign_struct* as)
                 c = 0;
                 for(j = 0; j < bv->num_bit;j++){
                         //LOG_MSG("Bit %d %d %d", j,bv->bits[j]->type,bv->sample_group);
-                        if(bv->bits[j]->type == ARCH_ETYPE_EXTRACT){
+                        if(bv->bits[j]->type == ARCH_ETYPE_EXTRACT || bv->bits[j]->type == ARCH_ETYPE_CORRECT ){
                                 code[len] = c+33;
                                 //len += bv->bits[j]->len;// strnlen(bv->bits[j]->p,256);
                                 len++;

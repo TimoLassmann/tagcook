@@ -19,7 +19,8 @@ struct kmer_counts{
         int L;
 };
 
-static int init_pst(struct pst** pst, int len);
+//static int init_pst(struct pst** pst, int len);
+static int init_pst(struct pst** pst,float expected_error, int len);
 static int init_helper(struct pst_node** helper, uint32_t* counts,float gamma_min);
 static float get_pst_prob(struct pst_node* n, char* string,int target, int pos);
 
@@ -214,7 +215,7 @@ float get_fppt_prob(struct fpst* f, char* string,int target, int pos, int len)
         return f->prob[n][target];
 }
 
-int run_build_pst(struct pst** pst, struct kmer_counts* k)//  struct tl_seq_buffer* sb)
+int run_build_pst(struct pst** pst, float expected_error, struct kmer_counts* k)//  struct tl_seq_buffer* sb)
 {
         struct pst* p = NULL;
         struct pst_node* helper = NULL;
@@ -225,7 +226,7 @@ int run_build_pst(struct pst** pst, struct kmer_counts* k)//  struct tl_seq_buff
 
         init_logsum();
 
-        RUN(init_pst(&p, k->L));
+        RUN(init_pst(&p,expected_error,  k->L));
 
         sum = 0.0;
         for(i = 0;i < 4;i++){
@@ -491,12 +492,16 @@ struct pst_node* build_ppt(struct pst* pst,struct fpst*f,int curf,struct pst_nod
         return n;
 }
 
-int init_pst(struct pst** pst, int len)//, struct tl_seq_buffer* sb)
+int init_pst(struct pst** pst,float expected_error, int len)//, struct tl_seq_buffer* sb)
 {
         struct pst* p = NULL;
         MMALLOC(p, sizeof(struct pst));
         p->L = len;
-        p->gamma_min = 0.01f;
+
+        p->gamma_min = 0.02f;
+        if(expected_error){
+                p->gamma_min = expected_error;
+        }
         p->p_min = 0.0001f;
         p->r = 1.02f;
         p->fpst_root = NULL;

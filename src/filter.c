@@ -99,7 +99,7 @@ int run_filter_pst(struct assign_struct* as, struct pst* pst, int index, float t
                 out = (out - pst->mean) / pst->var;
 
 
-                if(out >= 1.0){
+                if(out >= 3.0){
                         //LOG_MSG("%f %f %d", thres, out);
                         sb->fail |= READ_FAILP;
                 }

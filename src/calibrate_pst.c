@@ -20,12 +20,19 @@ int calibrate_pst(struct pst* pst, struct tl_seq_buffer* sb, int expected_len,st
         int len;
         int i,j,c;
 
+        int p_seq,p_index;
         s0 = 0.0;
         s1 = 0.0;
         s2 = 0.0;
 
         MMALLOC(test_seq, sizeof(char) * (expected_len+1));
         for(i = 0; i < 1000000;i++){
+                /*p_seq = tl_random_int(rng,sb->num_seq);
+                p_index = tl_random_int(rng, sb->sequences[p_seq]->len - expected_len);
+                for(j = 0; j < expected_len;j++){
+                        test_seq[j] = sb->sequences[p_seq]->seq[p_index+j];
+                        }*/
+
                 for(j = 0; j < expected_len;j++){
                         sum = 0;
                         r = tl_random_double(rng);

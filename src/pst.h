@@ -14,8 +14,8 @@ struct kmer_counts;
 struct pst_node;
 struct pst;
 
-
-EXTERN int run_build_pst(struct pst** pst, struct kmer_counts* k);
+EXTERN int run_build_pst(struct pst** pst, float expected_error, struct kmer_counts* k);
+///EXTERN int run_build_pst(struct pst** pst, struct kmer_counts* k);
 //EXTERN int run_build_pst(struct pst** pst, struct tl_seq_buffer* sb);
 //aEXTERN int score_pst(struct pst* pst, char* seq, int len, float*r);
 EXTERN int score_pst(const struct pst* pst, const char* seq,const int len, float* P_M, float* P_R);

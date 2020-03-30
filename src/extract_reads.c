@@ -82,8 +82,8 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
                         RUN(alloc_kmer_counts(&k, 12));
                         RUN(add_counts(k, wb));
 
-                        RUN(run_build_pst(&pst, k));
-                        calibrate_pst(pst, wb, 20, rng);
+                        RUN(run_build_pst(&pst, 0.05,k));
+                        calibrate_pst(pst, wb, 75, rng);
                         free_kmer_counts(k);
                         free_tl_seq_buffer(wb);
                         wb = NULL;
@@ -507,6 +507,21 @@ int process_read(struct collect_read* ri,struct poahmm* poahmm, struct read_stru
                                 kputc(ri->seq[seq_pos],&sb->p);
                                 kputc(ri->qual[seq_pos],&sb->q);
                                 break;
+                        case ARCH_ETYPE_CORRECT:
+                                if(c != old_c){
+                                        s_index = 0;
+                                        sb = b->bits[local_bit_index];
+                                        //ASSERT(i_file == sb->file, "Oh dear: want %d got %d",i_file,sb->file);
+                                        //sb->file = i_file;
+                                        //sb->code = (char)(read + 33);
+                                        sb->type = ARCH_ETYPE_CORRECT;
+                                        //sb->fail = ri->f;
+                                        local_bit_index++;
+                                        read++;
+                                }
+                                kputc(ri->seq[seq_pos],&sb->p);
+                                kputc(ri->qual[seq_pos],&sb->q);
+                                break;
                         default:
                                 break;
                         }
@@ -581,9 +596,10 @@ int write_all(const struct assign_struct* as, struct tl_seq_buffer** wb, int bam
                         //bv = as->bit_vec[as->loc_out_reads[i]];
                         if(bv->fail){
                                 //LOG_MSG("Writing %d", write_buf->num_seq);
-                                RUN(write_seq_buf(write_buf, f_hand));
-                                write_buf->num_seq = 0;
-
+                                if(f_hand){
+                                        RUN(write_seq_buf(write_buf, f_hand));
+                                        write_buf->num_seq = 0;
+                                }
                                 //RUN(close_seq_file(&f_hand));
                                 break;
                         }

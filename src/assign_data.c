@@ -336,13 +336,11 @@ int setup_assign_structure(struct arch_library* al, struct read_ensembl*e, struc
                                 MREALLOC(p, sizeof(int)* p_size);
                                 MREALLOC(as->loc_out_reads , sizeof(int) * p_size);
                                 }*/
-                        if(c == ARCH_ETYPE_EXTRACT){
+                        if(c == ARCH_ETYPE_EXTRACT || c == ARCH_ETYPE_CORRECT){
                                 as->loc_out_reads[as->out_reads] = as->num_bits;
                                 //p[p_index] = as->out_reads;
                                 as->out_reads++;
                         }
-
-
                         as->num_bits++;
                 }
 
@@ -576,7 +574,7 @@ int add_file_name_options(struct rbtree_root** r, struct read_ensembl*e,  struct
                 fprintf(stdout,"Read %d: ",i);
 
                 for(j = 0; j < read_structure->num_segments;j++){
-                        if(read_structure->seg_spec[j]->extract == ARCH_ETYPE_EXTRACT){
+                        if(read_structure->seg_spec[j]->extract == ARCH_ETYPE_EXTRACT || read_structure->seg_spec[j]->extract == ARCH_ETYPE_CORRECT){
                                 RUN(alloc_demux_struct(&tmp_ptr));
                                 if(read_structure->seg_spec[j]->name){
                                         len = strlen(read_structure->seg_spec[j]->name);
@@ -611,7 +609,7 @@ int add_file_name_options(struct rbtree_root** r, struct read_ensembl*e,  struct
         for(i = 0;i < root->num_entries;i++){
                 tmp_ptr = root->data_nodes[i];
                 tmp_ptr->id = i;
-                //fprintf(stdout,"AFTER DEMUX %s %s %d\n",tmp_ptr->out_filename, tmp_ptr->key ,tmp_ptr->count);
+                fprintf(stdout,"AFTER DEMUX %s %s %d\n",tmp_ptr->out_filename, tmp_ptr->key ,tmp_ptr->count);
                 if(tmp_ptr->count > 1){
                         for(j = 0; j < tmp_ptr->count;j++){
                                 RUN(alloc_demux_struct(&new_ptr));

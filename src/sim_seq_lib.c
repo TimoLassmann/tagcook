@@ -58,6 +58,7 @@ int mutate_seq(char* ref,char* target,int len, float error_rate, struct rng_stat
         *errors = 0;
         for(i = 0; i < len;i++){
                 r = tl_random_double(rng);
+                //LOG_MSG("%f %f ", r, error_rate);
                 if(r < error_rate){
 
                         //LOG_MSG("Has error");
