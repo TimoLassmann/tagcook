@@ -50,9 +50,18 @@ int run_filter_exact(struct assign_struct* as, struct ref* ref, int index, int t
                         seq_b = ref->seq[j];
                         len_b = ref->len[j];
                         if(len_a > len_b){
+#ifdef HAVE_AVX2
                                 dist = bpm_256(seq_a, seq_b, len_a, len_b);
+#else
+                                dist = bpm(seq_a, seq_b, len_a, len_b);
+#endif
+
                         }else{
+#ifdef HAVE_AVX2
                                 dist = bpm_256(seq_b, seq_a, len_b, len_a);
+#else
+                                dist = bpm(seq_b, seq_a, len_b, len_a);
+#endif
                         }
                         //fprintf(stdout,"%d ", dist);
                         if(dist < thres){
