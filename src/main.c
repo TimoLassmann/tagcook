@@ -3,6 +3,7 @@
 #endif
 
 #include "interface.h"
+#include "outfmt.h"
 #include "arch_lib.h"
 #include "seq_stats.h"
 #include "hmm_model_bag.h"
@@ -28,6 +29,10 @@ int main (int argc,char * argv[]) {
         }
         ASSERT(param->num_infiles > 0, "Number of inputs has to be greater than 0");
         ASSERT(param->outfile != NULL, "No output file suffix");
+
+        if(param->fmt == TAGCOOK_OUT_FMT_UNKNOWN){
+                ERROR_MSG("Output format not recognised");
+        }
 
         /* Sanity checks */
         /* are we dealing with multiple lanes? */

@@ -26,13 +26,12 @@ struct parameters {
         char* outfile;
         char* recipe;
         char* book_file;
-        int umitools_compat;
         int filter_error;
         int num_threads;
         int num_infiles;
         int quiet_flag;
         int seed;
-        int bam;
+        int fmt;
 
 };
 

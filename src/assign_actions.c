@@ -4,6 +4,7 @@
 #include "tldevel.h"
 
 #include "assign_data.h"
+#include <ctype.h>
 
 static int qsort_seq_bit_vec(const void *a, const void *b);
 
@@ -26,9 +27,10 @@ int post_process_assign(struct assign_struct* as)
         int tmp_len = 256;
 
         MMALLOC(code, sizeof(char) * tmp_len);
-
         for(i = 0; i < as->num_reads;i++){
                 bv = as->bit_vec[i];
+
+
                 ///* qsort by file identifier  */
                 //qsort(bv->bits, bv->num_bit,sizeof(struct seq_bit*), qsort_seq_bits_by_type_file);
                 len = 0;
@@ -56,7 +58,7 @@ int post_process_assign(struct assign_struct* as)
                                 break;
                         }
                         case ARCH_ETYPE_APPEND_CORRECT: {
-                                        //LOG_MSG("correcyt");
+                                //LOG_MSG("correcyt");
                                 bit = bv->bits[j];
                                 ann = as->bit_ann[j];
                                 //LOG_MSG("%s %s %s", ann->name.s, ann->c_name.s,ann->q_name.s);
@@ -89,7 +91,7 @@ int post_process_assign(struct assign_struct* as)
                                 bit->p.l = 0;
                                 //for(i = 0; i < bit->p_corr.l;i++){
                                 kputsn( bit->p_corr.s, bit->p_corr.l, &bit->p);
-                                        //}
+                                //}
                                 break;
                         }
                         default:
@@ -97,7 +99,7 @@ int post_process_assign(struct assign_struct* as)
                         }
                         bv->fail |= bv->bits[j]->fail;
                         //if(bv->fail){
-                                //LOG_MSG("FAIL:%d  %s",bv->fail,bv->name);
+                        //LOG_MSG("FAIL:%d  %s",bv->fail,bv->name);
                         //}
                 }
                 fprintf(stdout,"%s %s\n",bv->name, bv->append.s);
@@ -122,79 +124,223 @@ int post_process_assign(struct assign_struct* as)
                 }
                 //exit(0);
                 /*RUNP(tmp_ptr = as->demux_names->tree_get_data(as->demux_names,tmp));
-                        //if(tmp_ptr){
-                        tmp_ptr->count++;
-                        //fprintf(stdout,"%s -> %d (%d)\n", tmp_ptr->name ,tmp_ptr->id,tmp_ptr->count);
-                        bv->sample_group = tmp_ptr->id;
+                //if(tmp_ptr){
+                tmp_ptr->count++;
+                //fprintf(stdout,"%s -> %d (%d)\n", tmp_ptr->name ,tmp_ptr->id,tmp_ptr->count);
+                bv->sample_group = tmp_ptr->id;
                 if(len){
-                        g = 0;
-                        for(j = 0; j < bv->num_bit;j++){
-                                if(bv->bits[j]->type == BAR_TYPE){
-                                        barcode = bv->bits[j]->p;
-                                        len = bv->bits[j]->len;
-                                        //len = strnlen(barcode,256);
-                                        for(c = 0; c < len;c++){
-                                                tmp[g] = barcode[c];
-                                                g++;
-                                                if(g == tmp_len){
-                                                        tmp_len = tmp_len + tmp_len /2;
-                                                        MREALLOC(tmp,sizeof(char) * tmp_len);
-                                                }
-                                        }
-                                        tmp[g] = '_';
-                                        g++;
-                                        if(g == tmp_len){
-                                                tmp_len = tmp_len + tmp_len /2;
-                                                MREALLOC(tmp,sizeof(char) * tmp_len);
-                                        }
-                                }
-                        }
-                        tmp[g-1] = 0;
+                g = 0;
+                for(j = 0; j < bv->num_bit;j++){
+                if(bv->bits[j]->type == BAR_TYPE){
+                barcode = bv->bits[j]->p;
+                len = bv->bits[j]->len;
+                //len = strnlen(barcode,256);
+                for(c = 0; c < len;c++){
+                tmp[g] = barcode[c];
+                g++;
+                if(g == tmp_len){
+                tmp_len = tmp_len + tmp_len /2;
+                MREALLOC(tmp,sizeof(char) * tmp_len);
+                }
+                }
+                tmp[g] = '_';
+                g++;
+                if(g == tmp_len){
+                tmp_len = tmp_len + tmp_len /2;
+                MREALLOC(tmp,sizeof(char) * tmp_len);
+                }
+                }
+                }
+                tmp[g-1] = 0;
 
-                        //LOG_MSG("searchfor >%s<\n",tmp);
-                        RUNP(tmp_ptr = as->demux_names->tree_get_data(as->demux_names,tmp));
-                        //if(tmp_ptr){
-                        tmp_ptr->count++;
-                        //fprintf(stdout,"%s -> %d (%d)\n", tmp_ptr->name ,tmp_ptr->id,tmp_ptr->count);
-                        bv->sample_group = tmp_ptr->id;
-                        //bv->bc = tmp;
-                        //tmp = NULL;
+                //LOG_MSG("searchfor >%s<\n",tmp);
+                RUNP(tmp_ptr = as->demux_names->tree_get_data(as->demux_names,tmp));
+                //if(tmp_ptr){
+                tmp_ptr->count++;
+                //fprintf(stdout,"%s -> %d (%d)\n", tmp_ptr->name ,tmp_ptr->id,tmp_ptr->count);
+                bv->sample_group = tmp_ptr->id;
+                //bv->bc = tmp;
+                //tmp = NULL;
                 }else{
-                        bv->sample_group = 0;
+                bv->sample_group = 0;
                 }
                 if(umi_len){
-                        tmp = NULL;
-                        MMALLOC(tmp, sizeof(char) * umi_len);
-                        g = 0;
-                        for(j = 0; j < bv->num_bit;j++){
-                                if(bv->bits[j]->type == UMI_TYPE){
-                                        umi = bv->bits[j]->p;
-                                        len = bv->bits[j]->len;
-                                        for(c = 0; c < len;c++){
-                                                tmp[g] = umi[c];
-                                                g++;
-                                        }
-                                        tmp[g] = '_';
-                                        g++;
-                                }
-                        }
-                        tmp[g-1] = 0;
-                        bv->umi = tmp;
-                        tmp = NULL;
+                tmp = NULL;
+                MMALLOC(tmp, sizeof(char) * umi_len);
+                g = 0;
+                for(j = 0; j < bv->num_bit;j++){
+                if(bv->bits[j]->type == UMI_TYPE){
+                umi = bv->bits[j]->p;
+                len = bv->bits[j]->len;
+                for(c = 0; c < len;c++){
+                tmp[g] = umi[c];
+                g++;
+                }
+                tmp[g] = '_';
+                g++;
+                }
+                }
+                tmp[g-1] = 0;
+                bv->umi = tmp;
+                tmp = NULL;
                 }
                 if(bv->sample_group == -1){
-                        fprintf(stdout,"%d %d\n",i, bv->num_bit);
-                        for(j = 0; j < bv->num_bit;j++){
-                                fprintf(stdout,"bit%d: type: %d\n", j, bv->bits[j]->type);
-                                if(bv->bits[j]->type == BAR_TYPE){
-                                        barcode = bv->bits[j]->p;
-                                        fprintf(stdout,"%s\n",barcode);
-                                }
-                        }
-                        ERROR_MSG("asda");
+                fprintf(stdout,"%d %d\n",i, bv->num_bit);
+                for(j = 0; j < bv->num_bit;j++){
+                fprintf(stdout,"bit%d: type: %d\n", j, bv->bits[j]->type);
+                if(bv->bits[j]->type == BAR_TYPE){
+                barcode = bv->bits[j]->p;
+                fprintf(stdout,"%s\n",barcode);
+                }
+                }
+                ERROR_MSG("asda");
                 }
                 */
         }
+
+        //LOG_MSG("%d %d", e_fail,d_fail);
+        MFREE(code);
+
+        qsort(as->bit_vec,as->num_reads ,sizeof(struct seq_bit_vec*) , qsort_seq_bit_vec);
+        return OK;
+ERROR:
+        return FAIL;
+}
+
+
+int post_process_assign_umitools(struct assign_struct* as)
+{
+        struct seq_bit_vec* bv = NULL;
+        struct seq_bit* bit = NULL;
+        struct demux_struct* tmp_ptr = NULL;
+        struct bit_annotation* ann = NULL;
+        uint8_t etype;
+        char* code =  NULL;
+        //char* barcode;
+        //char* umi;
+        int i,j,c;//g;
+        int correct_index;
+        int len;
+        int first_add = 1;
+        //int umi_len;
+        int tmp_len = 256;
+
+        MMALLOC(code, sizeof(char) * tmp_len);
+        for(i = 0; i < as->num_reads;i++){
+                bv = as->bit_vec[i];
+
+                len = strnlen(bv->name, TL_SEQ_MAX_NAME_LEN);
+
+                for(j = 0; j < len;j++){
+                        if(isspace( bv->name[j])){
+                                break;
+                        }
+
+                        kputc(bv->name[j], &bv->append);
+                }
+                len = 0;
+
+                first_add = 1;
+                //umi_len = 0;
+                //fprintf(stdout,"%s ",bv->name);
+                for(j = 0; j < bv->num_bit;j++){
+
+
+                        etype = bv->bits[j]->type;
+                        switch (etype) {
+                        case ARCH_ETYPE_SPLIT: {
+                                code[len] = bv->bits[j]->code;
+                                //len += bv->bits[j]->len;// strnlen(bv->bits[j]->p,256);
+                                len++;
+                                break;
+                        }
+                        case ARCH_ETYPE_APPEND:{
+                                bit = bv->bits[j];
+                                ann = as->bit_ann[j];
+                                //LOG_MSG("%s %s %s", ann->name.s, ann->c_name.s,ann->q_name.s);
+                                //kputs(ann->name.s, &bv->append);
+                                //kputs(":Z:", &bv->append);
+                                if(first_add){
+                                        kputc('_', &bv->append);
+                                        first_add = 0;
+                                }
+                                kputs(bit->p.s , &bv->append);
+                                //kputc(' ', &bv->append);
+                                break;
+                        }
+                        case ARCH_ETYPE_APPEND_CORRECT: {
+                                //LOG_MSG("correcyt");
+                                bit = bv->bits[j];
+                                ann = as->bit_ann[j];
+                                //LOG_MSG("%s %s %s", ann->name.s, ann->c_name.s,ann->q_name.s);
+                                correct_index =  bit->correct_index;
+                                RUN(ref_correct(as->bit_ann[j]->bar_hash,as->subm, bit, 33));
+
+                                //kputs(ann->name.s, &bv->append);
+                                //kputs(":Z:", &bv->append);
+                                //kputs(bit->p.s , &bv->append);
+                                //kputc(' ', &bv->append);
+
+                                //kputs(ann->c_name.s  , &bv->append);
+                                //kputs(":Z:", &bv->append);
+                                //kputs(bit->p_corr.s , &bv->append);
+                                //kputc(' ', &bv->append);
+
+                                if(first_add){
+                                        kputc('_', &bv->append);
+                                        first_add = 0;
+                                }
+                                kputs(bit->p_corr.s , &bv->append);
+
+                                //kputs(ann->q_name.s  , &bv->append);
+                                //kputs(":Z:", &bv->append);
+                                //kputs(bit->q.s , &bv->append);
+                                //kputc(' ', &bv->append);
+                                break;
+                        }
+                        case ARCH_ETYPE_CORRECT: {
+                                //LOG_MSG("correcyt");
+                                bit = bv->bits[j];
+                                ann = as->bit_ann[j];
+                                //LOG_MSG("%s %s %s", ann->name.s, ann->c_name.s,ann->q_name.s);
+                                correct_index =  bit->correct_index;
+                                RUN(ref_correct(as->bit_ann[j]->bar_hash,as->subm, bit, 33));
+                                bit->p.l = 0;
+                                //for(i = 0; i < bit->p_corr.l;i++){
+                                kputsn( bit->p_corr.s, bit->p_corr.l, &bit->p);
+                                //}
+                                break;
+                        }
+                        default:
+                                break;
+                        }
+                        bv->fail |= bv->bits[j]->fail;
+                        //if(bv->fail){
+                        //LOG_MSG("FAIL:%d  %s",bv->fail,bv->name);
+                        //}
+                }
+                fprintf(stdout,"%s %s\n",bv->name, bv->append.s);
+                //fprintf(stdout,"\n");
+                code[len] =0;
+                //LOG_MSG("BCVVXC");
+                c = 0;
+                for(j = 0; j < bv->num_bit;j++){
+                        //LOG_MSG("Bit %d %d %d", j,bv->bits[j]->type,bv->sample_group);
+                        if(bv->bits[j]->type == ARCH_ETYPE_EXTRACT || bv->bits[j]->type == ARCH_ETYPE_CORRECT ){
+                                code[len] = c+33;
+                                //len += bv->bits[j]->len;// strnlen(bv->bits[j]->p,256);
+                                len++;
+                                code[len] =0;
+                                //fprintf(stdout,"CODE::: %s\n",code);
+                                RUNP(tmp_ptr = as->demux_names->tree_get_data(as->demux_names,code));
+                                //LOG_MSG("Setting: %d to id: %d code: %s %s FAIL: %d", c,tmp_ptr->id,code,tmp_ptr->out_filename,bv->fail );
+                                bv->out_file_id[c] = tmp_ptr->id;
+                                len--;
+                                c++;
+                        }
+                }
+        }
+
         //LOG_MSG("%d %d", e_fail,d_fail);
         MFREE(code);
 

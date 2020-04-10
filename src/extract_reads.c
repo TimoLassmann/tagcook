@@ -13,6 +13,7 @@
 
 //#include "hmm_model_bag.h"
 //#include "core_hmm_functions.h"
+#include "outfmt.h"
 #include "assign_data.h"
 
 #include "filter.h"
@@ -95,7 +96,7 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
 
         //param->bam = 1;
         /* figure out how many barcodes etc */
-        RUN(init_assign_structure(&as, al, rg,param->outfile, CHUNKS* READ_CHUNK_SIZE, param->bam));
+        RUN(init_assign_structure(&as, al, rg,param->outfile, CHUNKS* READ_CHUNK_SIZE, param->fmt));
 
         as->block_size = READ_CHUNK_SIZE;
         //RUN(galloc(&as->assignment, as->total, as->num_barcodes));
@@ -228,14 +229,18 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
                         }
 
                         START_TIMER(t1);
-                        RUN(post_process_assign(as));
+                        if(param->fmt == TAGCOOK_OUT_FMT_UMITOOLS){
+                                RUN(post_process_assign_umitools(as));
+                        }else{
+                                RUN(post_process_assign(as));
+                        }
 
                         STOP_TIMER(t1);
                         GET_TIMING(t1);
                         //LOG_MSG("Processing took: %f ",GET_TIMING(t1));
                         //LOG_MSG("Write buff: %p",wb);
                         START_TIMER(t1);
-                        RUN(write_all(as,&wb,param->bam));
+                        RUN(write_all(as,&wb,param->fmt));
                         STOP_TIMER(t1);
                         GET_TIMING(t1);
                         //LOG_MSG("Write took: %f ",GET_TIMING(t1));
@@ -546,7 +551,7 @@ int process_read(struct collect_read* ri,struct poahmm* poahmm, struct read_stru
         //return FAIL;
 }
 
-int write_all(const struct assign_struct* as, struct tl_seq_buffer** wb, int bam)
+int write_all(const struct assign_struct* as, struct tl_seq_buffer** wb, int fmt)
 {
         struct demux_struct** dm;
         //struct demux_struct* tmp_ptr = NULL;
@@ -627,7 +632,7 @@ int write_all(const struct assign_struct* as, struct tl_seq_buffer** wb, int bam
                                 }
 
                                 if(!dm[bv->out_file_id[out_read]]->f_hand){
-                                        if(bam){
+                                        if(fmt == TAGCOOK_OUT_FMT_BAM){
                                                 LOG_MSG("Opening BAM : %s" , dm[bv->out_file_id[out_read]]->out_filename);
                                                 LOG_MSG("ID: %d", bv->out_file_id[out_read]);
                                                 RUN(open_sam_bam(&dm[bv->out_file_id[out_read]]->f_hand, dm[bv->out_file_id[out_read]]->out_filename, TLSEQIO_WRITE));
@@ -644,9 +649,15 @@ int write_all(const struct assign_struct* as, struct tl_seq_buffer** wb, int bam
                         write_buf->sequences[write_buf->num_seq]->seq = sb->p.s;//  sb->p;
                         write_buf->sequences[write_buf->num_seq]->qual = sb->q.s;
                         write_buf->sequences[write_buf->num_seq]->len = sb->p.l;
-                        write_buf->sequences[write_buf->num_seq]->name = bv->name;
+                        if(fmt == TAGCOOK_OUT_FMT_UMITOOLS){
+                                write_buf->sequences[write_buf->num_seq]->name = bv->append.s;// bv->name;
+                                //fprintf(stdout,"%s\n", bv->append.s);
+                                write_buf->sequences[write_buf->num_seq]->aux = NULL;
+                        }else{
+                                write_buf->sequences[write_buf->num_seq]->name = bv->name;
                         //fprintf(stdout,"%s\n", bv->append.s);
-                        write_buf->sequences[write_buf->num_seq]->aux = bv->append.s;
+                                write_buf->sequences[write_buf->num_seq]->aux = bv->append.s;
+                        }
                         /*if(out_read == 1){
                         LOG_MSG("");
                         LOG_MSG("%s ", sb->p.s);

@@ -79,11 +79,12 @@ struct assign_struct{
         int num_bits;
         int num_reads;
         int alloc_total;
+        int fmt;
 };
 
 
 
-extern int init_assign_structure(struct assign_struct** assign,struct arch_library* al, struct read_groups* rg, char* prefix, int total,int bam);
+extern int init_assign_structure(struct assign_struct** assign,struct arch_library* al, struct read_groups* rg, char* prefix, int total,int fmt);
 
 
 extern int sort_as_by_file_type(struct assign_struct* as);
@@ -94,6 +95,7 @@ extern void free_assign_structure(struct assign_struct* as);
 
 
 extern int post_process_assign(struct assign_struct* as);
+extern int post_process_assign_umitools(struct assign_struct* as);
 extern int ref_correct(khash_t(exact) * h ,struct qsubscore* subm, struct seq_bit* sb, int q_offset);
 
 #endif
