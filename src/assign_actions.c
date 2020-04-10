@@ -102,7 +102,7 @@ int post_process_assign(struct assign_struct* as)
                         //LOG_MSG("FAIL:%d  %s",bv->fail,bv->name);
                         //}
                 }
-                fprintf(stdout,"%s %s\n",bv->name, bv->append.s);
+                //fprintf(stdout,"%s %s\n",bv->name, bv->append.s);
                 //fprintf(stdout,"\n");
                 code[len] =0;
                 //LOG_MSG("BCVVXC");
@@ -319,7 +319,7 @@ int post_process_assign_umitools(struct assign_struct* as)
                         //LOG_MSG("FAIL:%d  %s",bv->fail,bv->name);
                         //}
                 }
-                fprintf(stdout,"%s %s\n",bv->name, bv->append.s);
+                //fprintf(stdout,"%s %s\n",bv->name, bv->append.s);
                 //fprintf(stdout,"\n");
                 code[len] =0;
                 //LOG_MSG("BCVVXC");
