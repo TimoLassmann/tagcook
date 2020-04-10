@@ -38,6 +38,7 @@
 #define OPT_FILTER 5
 #define OPT_ERROR 6
 #define OPT_OUTFORMAT 7
+#define OPT_UMITOOLS_COMPAT 8
 
 static int print_tagcook_warranty(void);
 
@@ -150,6 +151,7 @@ int interface(struct parameters** p,int argc, char *argv[])
 
         param->recipe = NULL;
         param->book_file = NULL;
+        param->umitools_compat = 0;
         //param->read_structures = NULL;
 
         //RUN(malloc_read_structure(&param->read_structure));
@@ -163,6 +165,7 @@ int interface(struct parameters** p,int argc, char *argv[])
                         {"book",required_argument,0, OPT_BOOK },
                         {"filter", required_argument,0,OPT_FILTER},
                         {"fmt", required_argument,0,OPT_OUTFORMAT},
+                        {"umitools", required_argument,0,OPT_UMITOOLS_COMPAT},
                         {"error", required_argument, 0, OPT_ERROR},
                         {"help",0,0,'h'},
                         {"version",0,0,'v'},
@@ -181,10 +184,12 @@ int interface(struct parameters** p,int argc, char *argv[])
                 case 0:
                         break;
                 case OPT_OUTFORMAT:
-                        if(!strncmp(optarg, "fastq",5)){
+                        if(!strncmp(optarg, "umitools",8)){
+                                param->bam = 2;
+                        }else if(!strncmp(optarg, "fastq",5)){
                                 param->bam = 0;
                         }else if(!strncmp(optarg, "bam", 3)){
-                                param->bam =1;
+                                param->bam = 1;
                         }else{
                                 ERROR_MSG("fmt option: %s not recognised", optarg);
                         }

@@ -27,7 +27,7 @@ int post_process_assign(struct assign_struct* as)
 
         MMALLOC(code, sizeof(char) * tmp_len);
 
-        for(i = 0; i < as->num_reads ;i++){
+        for(i = 0; i < as->num_reads;i++){
                 bv = as->bit_vec[i];
                 ///* qsort by file identifier  */
                 //qsort(bv->bits, bv->num_bit,sizeof(struct seq_bit*), qsort_seq_bits_by_type_file);
@@ -78,7 +78,6 @@ int post_process_assign(struct assign_struct* as)
                                 kputs(bit->q.s , &bv->append);
                                 kputc(' ', &bv->append);
                                 break;
-
                         }
                         case ARCH_ETYPE_CORRECT: {
                                 //LOG_MSG("correcyt");
@@ -101,6 +100,7 @@ int post_process_assign(struct assign_struct* as)
                                 //LOG_MSG("FAIL:%d  %s",bv->fail,bv->name);
                         //}
                 }
+                fprintf(stdout,"%s %s\n",bv->name, bv->append.s);
                 //fprintf(stdout,"\n");
                 code[len] =0;
                 //LOG_MSG("BCVVXC");
