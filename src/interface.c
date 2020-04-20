@@ -39,7 +39,6 @@
 #define OPT_ERROR 6
 #define OPT_OUTFORMAT 7
 
-
 static int print_tagcook_warranty(void);
 
 static int print_tagcook_header(void);
@@ -166,6 +165,7 @@ int interface(struct parameters** p,int argc, char *argv[])
                         {"filter", required_argument,0,OPT_FILTER},
                         {"fmt", required_argument,0,OPT_OUTFORMAT},
                         {"error", required_argument, 0, OPT_ERROR},
+                        {"threads",required_argument,0,'t'},
                         {"help",0,0,'h'},
                         {"version",0,0,'v'},
                         {"recipe",required_argument,0,'r'},
@@ -173,7 +173,7 @@ int interface(struct parameters** p,int argc, char *argv[])
                 };
 
                 int option_index = 0;
-                c = getopt_long_only (argc, argv,"o:t:r:qhv",long_options, &option_index);
+                c = getopt_long_only (argc, argv,"o:t:r:hv",long_options, &option_index);
 
                 if (c == -1){
                         break;
@@ -222,6 +222,7 @@ int interface(struct parameters** p,int argc, char *argv[])
                         break;
                 case '?':
                         exit(1);
+
                         break;
                 default:
                         ERROR_MSG("Option not recognised");

@@ -87,11 +87,12 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
                         RUN(add_counts(k, wb));
 
                         RUN(run_build_pst(&pst, 0.05,k));
-                        calibrate_pst(pst, wb, 75, rng);
+                        calibrate_pst(pst, wb, 100, rng);
                         free_kmer_counts(k);
                         free_tl_seq_buffer(wb);
                         wb = NULL;
                 }
+
         }
 
         //param->bam = 1;
@@ -221,7 +222,7 @@ int extract_reads(struct arch_library* al, struct read_groups* rg,struct paramet
 #pragma omp for private(i)
 #endif
                                 for(i = 0; i < as->num_reads;i++){
-                                        run_filter_pst(as,pst,i,0.9f);
+                                        run_filter_pst(as,pst,i,5.0f);
                                 }
                                 STOP_TIMER(t1);
                                 GET_TIMING(t1);

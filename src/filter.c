@@ -100,9 +100,10 @@ int run_filter_pst(struct assign_struct* as, struct pst* pst, int index, float t
                 //RUN(scan_read_with_pst(pst,  sb->p.s , sb->p.l,&out));
                 RUN(score_pst(pst,sb->p.s , sb->p.l, &P_M, &P_R));
                 out = P_M-P_R;
+                out = out / (double)sb->p.l;
                 //LOG_MSG("%d Z-score: %f (%f %f %f)",index, (out - pst->mean) / pst->var, out, pst->mean,pst->var);
                 out = (out - pst->mean) / pst->var;
-                if(out >= 3.0){
+                if(out >= thres){
                         //LOG_MSG("%f %f %d", thres, out);
                         sb->fail |= READ_FAILP;
                 }

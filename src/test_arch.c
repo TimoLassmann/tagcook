@@ -51,7 +51,7 @@ int test_architectures(struct cookbook* cb, struct read_groups* rg)
                 //LOG_MSG("------");
                 //LOG_MSG("Testing: %s", cb->lib[i]->name);
                 RUN(test_arch_file_order(cb->lib[i],rg));
-                //cb->scores[i] = cb->lib[i]->P;
+                cb->scores[i] = cb->lib[i]->P;
 
                 //LOG_MSG("score: %f", cb->lib[i]->P);
                 //LOG_MSG("------");
@@ -142,7 +142,7 @@ int test_arch_file_order(struct arch_library* al,struct read_groups* rg)
         int i;
         int n_rg;
         if(al->num_arch != rg->e[0]->num_files){
-                //WARNING_MSG("numarch != infiles %d %d", al->num_arch, rg->e[0]->num_files);
+                WARNING_MSG("numarch != infiles %d %d", al->num_arch, rg->e[0]->num_files);
                 al->P = prob2scaledprob(0.0);
                 return OK;
         }

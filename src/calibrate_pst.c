@@ -25,13 +25,15 @@ int calibrate_pst(struct pst* pst, struct tl_seq_buffer* sb, int expected_len,st
         s1 = 0.0;
         s2 = 0.0;
 
-        MMALLOC(test_seq, sizeof(char) * (expected_len+1));
+        MMALLOC(test_seq, sizeof(char) * 151);
         for(i = 0; i < 1000000;i++){
                 /*p_seq = tl_random_int(rng,sb->num_seq);
                 p_index = tl_random_int(rng, sb->sequences[p_seq]->len - expected_len);
                 for(j = 0; j < expected_len;j++){
                         test_seq[j] = sb->sequences[p_seq]->seq[p_index+j];
                         }*/
+                expected_len = tl_random_int(rng, 100)+50;
+
 
                 for(j = 0; j < expected_len;j++){
                         sum = 0;
@@ -49,13 +51,11 @@ int calibrate_pst(struct pst* pst, struct tl_seq_buffer* sb, int expected_len,st
                 //LOG_MSG("%s", test_seq);
                 RUN(score_pst(pst,test_seq, expected_len, &P_M, &P_R));
                 score = P_M-P_R;
+                score = score / (double) expected_len;
                 //LOG_MSG("%f ",score);
                 s0 += 1.0;
                 s1 += score;
                 s2 += score * score;
-
-
-
         }
         pst->mean = s1 / s0;
 
