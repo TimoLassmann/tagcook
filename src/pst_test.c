@@ -81,7 +81,7 @@ int test_match_insert(char* infile)
 
         for(i = 0; i < 1;i++){
 
-                test_len = 50;
+                test_len = 15;
 
                 START_TIMER(timer);
                 for(j = 0;j <  5;j++){

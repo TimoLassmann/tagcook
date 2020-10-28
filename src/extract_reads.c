@@ -586,7 +586,8 @@ int write_all(const struct assign_struct* as, struct tl_seq_buffer** wb, int fmt
                         write_buf->sequences[i]->name = NULL;
                         write_buf->sequences[i]->seq = NULL;
                         write_buf->sequences[i]->qual = NULL;
-                        write_buf->sequences[i]->aux = NULL;
+                        write_buf->sequences[i]->data = NULL;
+                        /* writ_buf->sequences[i]->aux = NULL; */
                         //MMALLOC(write_buf->sequences[i]->name, sizeof(char) * MAX_OUTREADNAME);
                 }
                 //RUN(alloc_tl_seq_buffer(&write_buf, 100000));
@@ -653,11 +654,11 @@ int write_all(const struct assign_struct* as, struct tl_seq_buffer** wb, int fmt
                         if(fmt == TAGCOOK_OUT_FMT_UMITOOLS){
                                 write_buf->sequences[write_buf->num_seq]->name = bv->append.s;// bv->name;
                                 //fprintf(stdout,"%s\n", bv->append.s);
-                                write_buf->sequences[write_buf->num_seq]->aux = NULL;
+                                write_buf->sequences[write_buf->num_seq]->data = NULL;
                         }else{
                                 write_buf->sequences[write_buf->num_seq]->name = bv->name;
                         //fprintf(stdout,"%s\n", bv->append.s);
-                                write_buf->sequences[write_buf->num_seq]->aux = bv->append.s;
+                                write_buf->sequences[write_buf->num_seq]->data = bv->append.s;
                         }
                         /*if(out_read == 1){
                         LOG_MSG("");
@@ -688,7 +689,7 @@ int write_all(const struct assign_struct* as, struct tl_seq_buffer** wb, int fmt
         for(i = 0; i < write_buf->malloc_num;i++){
                 write_buf->sequences[i]->seq = NULL;
                 write_buf->sequences[i]->qual = NULL;
-                write_buf->sequences[i]->aux = NULL;
+                write_buf->sequences[i]->data = NULL;
                 write_buf->sequences[i]->name = NULL;
 
         }

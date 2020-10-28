@@ -49,6 +49,7 @@ int read_cookbook_command_line(struct cookbook** cookbook, char* in)
         cb = *cookbook;
         if(cb){
                 ERROR_MSG("Cookbook already exists");
+
         }
 
         RUN(alloc_cookbook(&cb));
