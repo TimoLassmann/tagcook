@@ -1,6 +1,3 @@
-
-
-
 #include <stdint.h>
 #include <string.h>
 #include "tldevel.h"
@@ -15,8 +12,6 @@
 #include "poahmm_structs.h"
 
 #include "init_poahmm.h"
-
-
 
 static int set_entry_prob(struct poahmm* poahmm, int* e_nodes, int num, int at_start,int index);
 

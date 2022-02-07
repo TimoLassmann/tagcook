@@ -1,4 +1,3 @@
-
 #include <stdint.h>
 #include <string.h>
 #include "tldevel.h"
@@ -145,7 +144,9 @@ int test_model_init(struct shared_sim_data* sd)
 
         int active_read_structure;
         int size;
+
         size = sizeof(in) / sizeof(char*);
+
         RUN(read_arch_into_lib(sd->al, in, size));
 
         active_read_structure = sd->al->num_arch-1;
@@ -175,7 +176,6 @@ ERROR:
 
 int run_single_test(struct shared_sim_data* sd, char** arch,int n, char* seq,char* label, float mean_q, float stdev_q)
 {
-
         struct poahmm* poahmm = NULL;
         int i,j;
         int len;

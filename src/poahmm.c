@@ -1,4 +1,3 @@
-
 #include <stdint.h>
 #include "tldevel.h"
 #include "tllogsum.h"
@@ -248,7 +247,6 @@ int forward_poahmm(struct poahmm* poahmm, uint8_t* seq, int len)
         }
 
         cells = poahmm->end->cells;
-
 
         cells[0].fY = prob2scaledprob(0.0f);
         cells[1].fY = prob2scaledprob(0.0f);
@@ -855,7 +853,7 @@ int viterbi_poahmm(struct poahmm* poahmm, uint8_t* seq, int len,  uint32_t* path
         //cells[i].fY = logsum(cells[i].fY, cells[i-1].fY + YY_boundary_exit);
         poahmm->f_score = cells[i].fY;
 
-        //DPRINTF3("NOW to: %d move: %d   \n",poahmm->end->cells[len+1].Y_to_state, poahmm->end->cells[len+1].Y_trans);
+        //DPRINTF3("NOW to: %d move: %d   \n",poahmm->end->cells[len+1].Y_to_state, poahmm->end->cells[len+1].Y_trAns);
 
         //print_viterbi_matrix(poahmm,  len);
 
@@ -1184,7 +1182,7 @@ int viterbi_poahmm_banded(struct poahmm* poahmm,const uint8_t* seq, const uint8_
                           /*}*/
 
                         cells[i].fM += get_qsubscore(qsub, node_nuc, seq[i], qual[i]);// eM[node_nuc][seq[i]];
-                        cells[i].fX +=  eX[node_nuc];
+                        cells[i].fX += eX[node_nuc];
                         cells[i].fY += eY[seq[i]];
                 }
                 cells[e+1].fM = prob2scaledprob(0.0);
@@ -2128,6 +2126,3 @@ int set_rank_transition_poahmm(struct poahmm* poahmm)
 ERROR:
         return FAIL;
 }
-
-
-
